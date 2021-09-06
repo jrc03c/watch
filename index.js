@@ -2,13 +2,47 @@ const fs = require("fs")
 const path = require("path")
 const getFilesRecursive = require("./get-files-recursive.js")
 const getHash = require("./get-hash.js")
+const applyWhitelistsAndBlacklists = require("./apply-whitelists-and-blacklists.js")
 
-function watch(target, callback) {
-  target = path.resolve(target)
+function watch(config) {
+  if (typeof config.target !== "string") {
+    throw new Error("You must provide a `target` file or directory to watch!")
+  }
+
+  const doNothing = () => {}
+  const target = path.resolve(config.target)
+  const created = config.created || doNothing
+  const modified = config.modified || doNothing
+  const deleted = config.deleted || doNothing
+  const scansPerSecond = config.scanRate || 999999
+  let whitelist, blacklist
+
+  if (config.include) {
+    if (config.include instanceof RegExp) {
+      whitelist = [config.include]
+    } else {
+      whitelist = config.include
+    }
+  }
+
+  if (config.exclude) {
+    if (config.exclude instanceof RegExp) {
+      blacklist = [config.exclude]
+    } else {
+      blacklist = config.exclude
+    }
+  }
+
+  if (whitelist && blacklist) {
+    throw new Error(
+      "Please only specify an `include` list *or* an `exclude` list (but not both)!"
+    )
+  }
 
   let files = fs.lstatSync(target).isFile()
     ? [target]
     : getFilesRecursive(target)
+  files = applyWhitelistsAndBlacklists(files, whitelist, blacklist)
 
   const dict = {}
   let index = 0
@@ -27,13 +61,13 @@ function watch(target, callback) {
 
       if (!dict[file]) {
         dict[file] = newHash
-        if (!first) callback({ type: "creation", file })
+        if (!first) created(file)
       } else {
-        if (newHash !== dict[file]) callback({ type: "modification", file })
+        if (newHash !== dict[file]) modified(file)
         dict[file] = newHash
       }
     } catch (e) {
-      callback({ type: "deletion", file })
+      deleted(file)
     }
 
     index++
@@ -42,15 +76,16 @@ function watch(target, callback) {
       first = false
       index = 0
 
-      const newFiles = fs.lstatSync(target).isFile()
+      let newFiles = fs.lstatSync(target).isFile()
         ? [target]
         : getFilesRecursive(target)
+      newFiles = applyWhitelistsAndBlacklists(newFiles, whitelist, blacklist)
 
       if (newFiles.length < files.length) {
         const deletedFiles = files.filter(f => newFiles.indexOf(f) < 0)
 
         deletedFiles.forEach(deletedFile => {
-          callback({ type: "deletion", file: deletedFile })
+          deleted(deletedFile)
         })
       }
 
@@ -58,7 +93,7 @@ function watch(target, callback) {
     }
 
     isBusy = false
-  }, 0)
+  }, 1000 / scansPerSecond)
 
   return {
     get files() {

@@ -13,18 +13,34 @@ npm install --save https://github.com/jrc03c/watch.js
 ```js
 const watch = require("@jrc03c/watch")
 
-const watcher = watch("some/directory/or/file", event => {
-  if (event.type === "creation") {
-    console.log("CREATED:", event.file)
-  }
+const watcher = watch({
+  target: "some/directory/or/file",
 
-  if (event.type === "modification") {
-    console.log("MODIFIED:", event.file)
-  }
+  // set the number of files to scan per second
+  scanRate: 1000,
 
-  if (event.type === "deletion") {
-    console.log("DELETED:", event.file)
-  }
+  created(file) {
+    console.log("CREATED:", file)
+  },
+
+  modified(file) {
+    console.log("MODIFIED:", file)
+  },
+
+  deleted(file) {
+    console.log("DELETED:", file)
+  },
+
+  // watch ONLY *.txt files
+  include: /\.txt/g,
+
+  // watch all files EXCEPT *.png and *.jpg files
+  exclude: [/\.png/g, /\.jpg/g],
+
+  // NOTE: The `include` and `exclude` properties can be defined as
+  // regexes or arrays of regexes. However, you can't use both at
+  // the same time. You can use neither, or ONLY `include`, or
+  // ONLY `exclude`!
 })
 
 // when finished watching:
