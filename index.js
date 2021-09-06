@@ -2,7 +2,7 @@ const fs = require("fs")
 const path = require("path")
 const getFilesRecursive = require("./get-files-recursive.js")
 const getHash = require("./get-hash.js")
-const applyWhitelistsAndBlacklists = require("./apply-whitelists-and-blacklists.js")
+const applyInclusionsAndExclusions = require("./apply-inclusions-and-exclusions.js")
 
 function watch(config) {
   if (typeof config.target !== "string") {
@@ -15,25 +15,25 @@ function watch(config) {
   const modified = config.modified || doNothing
   const deleted = config.deleted || doNothing
   const scansPerSecond = config.scanRate || 999999
-  let whitelist, blacklist
+  let inclusions, exclusions
 
   if (config.include) {
     if (config.include instanceof RegExp) {
-      whitelist = [config.include]
+      inclusions = [config.include]
     } else {
-      whitelist = config.include
+      inclusions = config.include
     }
   }
 
   if (config.exclude) {
     if (config.exclude instanceof RegExp) {
-      blacklist = [config.exclude]
+      exclusions = [config.exclude]
     } else {
-      blacklist = config.exclude
+      exclusions = config.exclude
     }
   }
 
-  if (whitelist && blacklist) {
+  if (inclusions && exclusions) {
     throw new Error(
       "Please only specify an `include` list *or* an `exclude` list (but not both)!"
     )
@@ -42,7 +42,7 @@ function watch(config) {
   let files = fs.lstatSync(target).isFile()
     ? [target]
     : getFilesRecursive(target)
-  files = applyWhitelistsAndBlacklists(files, whitelist, blacklist)
+  files = applyInclusionsAndExclusions(files, inclusions, exclusions)
 
   const dict = {}
   let index = 0
@@ -79,7 +79,7 @@ function watch(config) {
       let newFiles = fs.lstatSync(target).isFile()
         ? [target]
         : getFilesRecursive(target)
-      newFiles = applyWhitelistsAndBlacklists(newFiles, whitelist, blacklist)
+      newFiles = applyInclusionsAndExclusions(newFiles, inclusions, exclusions)
 
       if (newFiles.length < files.length) {
         const deletedFiles = files.filter(f => newFiles.indexOf(f) < 0)
