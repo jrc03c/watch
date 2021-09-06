@@ -26,7 +26,7 @@ function watch(config) {
   }
 
   if (config.exclude) {
-    if (config.exclude instanceof RegExp) {
+    if (config.exclude instanceof RegExp || typeof config === "string") {
       exclusions = [config.exclude]
     } else {
       exclusions = config.exclude

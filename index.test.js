@@ -54,7 +54,7 @@ beforeAll(() => {
 })
 
 afterAll(() => {
-  // exec(`rm -rf ${root}`)
+  exec(`rm -rf ${root}`)
 })
 
 test("tests that watchers call callbacks", async () => {
