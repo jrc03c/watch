@@ -2,7 +2,7 @@ const getFilesRecursive = require("./get-files-recursive.js")
 const exec = require("child_process").exec
 const path = require("path")
 const fs = require("fs")
-const dir = path.resolve("delete-me")
+const dir = path.resolve(Math.random().toString())
 
 function sort(arr) {
   const out = arr.slice()
