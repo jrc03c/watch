@@ -43,11 +43,11 @@ const watcher = watch({
   // or ONLY `exclude`!
 })
 
+// get the list of files being watched:
+// console.log(watcher.files)
+
 // when finished watching:
 // watcher.stop()
-
-// or get the list of files being watched:
-// console.log(watcher.files)
 ```
 
 # Caveats
