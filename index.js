@@ -1,31 +1,39 @@
 const fs = require("fs")
 const path = require("path")
 const crypto = require("crypto")
-
-function getHash(target) {
-  const raw = fs.readFileSync(target, "utf8")
-  return crypto.createHmac("sha256", raw).digest("hex")
-}
+const pause = require("./pause.js")
+const getFilesRecursive = require("./get-files-recursive.js")
+const getHash = require("./get-hash.js")
 
 const target = path.resolve(
   process.argv.slice(2).filter(a => !a.startsWith("--"))[0]
 )
 
-const isFile = fs.lstatSync(target).isFile()
+const files = fs.lstatSync(target).isFile()
+  ? [target]
+  : getFilesRecursive(target)
 
-if (isFile) {
-  let lastHash = getHash(target)
+const dict = {}
+let index = 0
+let isBusy = false
 
-  setInterval(() => {
-    const newHash = getHash(target)
+setInterval(async () => {
+  if (isBusy) return
+  isBusy = true
 
-    if (newHash !== lastHash) {
-      console.log(`"${target}" has changed!`)
-    } else {
-      console.log(`No changes in "${target}"...`)
+  const file = files[index]
+  const newHash = await getHash(file)
+
+  if (!dict[file]) {
+    dict[file] = newHash
+  } else {
+    if (newHash !== dict[file]) {
+      console.log(`${file} has changed!`)
     }
 
-    lastHash = newHash
-  }, 1000)
-} else {
-}
+    dict[file] = newHash
+  }
+
+  index = (index + 1) % files.length
+  isBusy = false
+}, 0)
