@@ -54,7 +54,7 @@ const watcher = watch({
 
 At the moment, `watch` doesn't directly notice the creation or deletion of _directories_; it only notices when _files_ have been added or deleted. So, if you make a new directory, `watch` won't notice until you add files to that directory. Similarly, if you delete a directory, `watch` will only notice that the files in that directory have been deleted, not that the directory itself was deleted.
 
-Also, if the target (root file or directory) you intend to watch completely disappears or doesn't exist in the first place, an error will be thrown instead of a deletion event. This happens whether the target is supposed to be a file or a directory.
+Also, if the target (root file or directory) you intend to watch completely disappears or doesn't exist in the first place, an error will be thrown (i.e., a deletion event _won't_ be emitted). This happens whether the target is supposed to be a file or a directory.
 
 Finally, I haven't tested all possible edge cases. It could be that `watch` will crash when it encounters certain kinds of files or extremely large files. Please let me know if you run into problems!
 
