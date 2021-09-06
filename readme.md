@@ -40,6 +40,8 @@ At the moment, `watch` doesn't directly notice the creation or deletion of _dire
 
 Also, if the target you intend to watch (via `watch(target)`) completely disappears or doesn't exist in the first place, an error will be thrown instead of a deletion event. This happens whether the target is supposed to be a file or a directory.
 
+Finally, I haven't tested all possible edge cases. It could be that `watch` will crash when it encounters certain kinds of files or extremely large files. Please let me know if you run into problems!
+
 # How it works
 
 I haven't really researched this, but it seems like a few of the popular file system watchers I've seen for Node rely on [`inotify`](https://en.wikipedia.org/wiki/Inotify) or similar. In other words, those other libraries work by creating a watcher for each file in a directory tree using `inotify`, which can eat up lots of system resources when the directory is large. In fact, in some cases, users have to manually increase their `inotify` watcher limit when the default number has been exceeded, usually by doing something like:
