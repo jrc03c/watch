@@ -38,9 +38,9 @@ const watcher = watch({
   exclude: [/\.png/g, /\.jpg/g],
 
   // NOTE: The `include` and `exclude` properties 👆 can be defined as
-  // regexes or arrays of regexes. However, you can't use both at
-  // the same time. You can use neither, or ONLY `include`, or
-  // ONLY `exclude`!
+  // regexes, strings, or arrays of regexes or strings. However, you 
+	// can't use both at the same time. You can use neither, or ONLY `include`,
+	// or ONLY `exclude`!
 })
 
 // when finished watching:
