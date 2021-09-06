@@ -2,11 +2,11 @@
   "name": "@jrc03c/watch",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "watch.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
-  "author": "",
+  "author": "jrc03c",
   "license": "ISC"
 }

@@ -1,7 +1,7 @@
 const fs = require("fs")
 const exec = require("child_process").exec
 const path = require("path")
-const watch = require("./index.js")
+const watch = require("./watch.js")
 
 Array.prototype.random = function () {
   const self = this
