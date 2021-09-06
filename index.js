@@ -1,7 +1,7 @@
 const fs = require("fs")
 const path = require("path")
 const getFilesRecursive = require("./get-files-recursive.js")
-const getHash = require("./get-hash.js")
+const getHashOfFile = require("./get-hash-of-file.js")
 const applyInclusionsAndExclusions = require("./apply-inclusions-and-exclusions.js")
 
 function watch(config) {
@@ -57,7 +57,7 @@ function watch(config) {
     let newHash
 
     try {
-      newHash = await getHash(file)
+      newHash = await getHashOfFile(file)
 
       if (!dict[file]) {
         dict[file] = newHash

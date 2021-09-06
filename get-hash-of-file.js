@@ -1,7 +1,7 @@
 const fs = require("fs")
 const crypto = require("crypto")
 
-function getHash(target) {
+function getHashOfFile(target) {
   return new Promise((resolve, reject) => {
     try {
       fs.readFile(target, "utf8", (error, raw) => {
@@ -17,4 +17,4 @@ function getHash(target) {
   })
 }
 
-module.exports = getHash
+module.exports = getHashOfFile
