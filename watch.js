@@ -1,6 +1,6 @@
 const fs = require("fs")
 const path = require("path")
-const getFilesRecursive = require("./get-files-recursive.js")
+const { getFilesDeepSync } = require("@jrc03c/fs-extras")
 const getHashOfFile = require("./get-hash-of-file.js")
 const applyInclusionsAndExclusions = require("./apply-inclusions-and-exclusions.js")
 
@@ -41,7 +41,7 @@ function watch(config) {
 
   let files = fs.lstatSync(target).isFile()
     ? [target]
-    : getFilesRecursive(target)
+    : getFilesDeepSync(target)
   files = applyInclusionsAndExclusions(files, inclusions, exclusions)
 
   const dict = {}
@@ -78,7 +78,7 @@ function watch(config) {
 
       let newFiles = fs.lstatSync(target).isFile()
         ? [target]
-        : getFilesRecursive(target)
+        : getFilesDeepSync(target)
       newFiles = applyInclusionsAndExclusions(newFiles, inclusions, exclusions)
 
       if (newFiles.length < files.length) {

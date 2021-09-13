@@ -8,5 +8,8 @@
   },
   "keywords": [],
   "author": "jrc03c",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@jrc03c/fs-extras": "github:jrc03c/fs-extras"
+  }
 }
