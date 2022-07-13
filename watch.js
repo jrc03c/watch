@@ -18,7 +18,10 @@ function watch(config) {
   let inclusions, exclusions
 
   if (config.include) {
-    if (config.include instanceof RegExp) {
+    if (
+      config.include instanceof RegExp ||
+      typeof config.include === "string"
+    ) {
       inclusions = [config.include]
     } else {
       inclusions = config.include
@@ -26,7 +29,10 @@ function watch(config) {
   }
 
   if (config.exclude) {
-    if (config.exclude instanceof RegExp || typeof config === "string") {
+    if (
+      config.exclude instanceof RegExp ||
+      typeof config.exclude === "string"
+    ) {
       exclusions = [config.exclude]
     } else {
       exclusions = config.exclude
