@@ -11,5 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@jrc03c/fs-extras": "github:jrc03c/fs-extras"
+  },
+  "devDependencies": {
+    "jest": "^29.0.3"
   }
 }
