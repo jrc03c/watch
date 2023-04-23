@@ -1,10 +1,11 @@
 {
   "name": "@jrc03c/watch",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "watch.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "pub": "npm version patch --force && npm publish --access=public"
   },
   "keywords": [],
   "author": "jrc03c",
