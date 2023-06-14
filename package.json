@@ -1,6 +1,6 @@
 {
   "name": "@jrc03c/watch",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "main": "watch.js",
   "scripts": {
