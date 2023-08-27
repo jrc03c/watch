@@ -1,8 +1,7 @@
-const fs = require("fs")
-const path = require("path")
 const { getFilesDeepSync } = require("@jrc03c/fs-extras")
-const getHashOfFile = require("./get-hash-of-file.js")
 const applyInclusionsAndExclusions = require("./apply-inclusions-and-exclusions.js")
+const fs = require("node:fs")
+const path = require("node:path")
 
 function watch(config) {
   if (typeof config.target !== "string") {
@@ -41,13 +40,11 @@ function watch(config) {
 
   if (inclusions && exclusions) {
     throw new Error(
-      "Please only specify an `include` list *or* an `exclude` list (but not both)!"
+      "Please only specify an `include` list *or* an `exclude` list (but not both)!",
     )
   }
 
-  let files = fs.lstatSync(target).isFile()
-    ? [target]
-    : getFilesDeepSync(target)
+  let files = fs.statSync(target).isFile() ? [target] : getFilesDeepSync(target)
   files = applyInclusionsAndExclusions(files, inclusions, exclusions)
 
   const dict = {}
@@ -60,17 +57,17 @@ function watch(config) {
     isBusy = true
 
     const file = files[index]
-    let newHash
+    let newModificationTime
 
     try {
-      newHash = await getHashOfFile(file)
+      newModificationTime = fs.statSync(file).mtimeMs
 
       if (!dict[file]) {
-        dict[file] = newHash
+        dict[file] = newModificationTime
         if (!first) created(file)
       } else {
-        if (newHash !== dict[file]) modified(file)
-        dict[file] = newHash
+        if (newModificationTime !== dict[file]) modified(file)
+        dict[file] = newModificationTime
       }
     } catch (e) {
       deleted(file)
@@ -82,9 +79,10 @@ function watch(config) {
       first = false
       index = 0
 
-      let newFiles = fs.lstatSync(target).isFile()
+      let newFiles = fs.statSync(target).isFile()
         ? [target]
         : getFilesDeepSync(target)
+
       newFiles = applyInclusionsAndExclusions(newFiles, inclusions, exclusions)
 
       if (newFiles.length < files.length) {

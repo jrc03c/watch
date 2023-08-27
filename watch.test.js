@@ -1,6 +1,8 @@
+const { exec } = require("child_process")
 const fs = require("fs")
-const exec = require("child_process").exec
+const makeKey = require("@jrc03c/make-key")
 const path = require("path")
+const pause = require("@jrc03c/pause")
 const watch = require("./watch.js")
 
 Array.prototype.random = function () {
@@ -11,23 +13,6 @@ Array.prototype.random = function () {
 String.prototype.random = function () {
   const self = this
   return self[parseInt(Math.random() * self.length)]
-}
-
-function makeKey(n) {
-  const alpha = "abcdefghijklmnopqrstuvwxyz"
-  let out = ""
-  for (let i = 0; i < n; i++) out += alpha.random()
-  return out
-}
-
-function pause(ms) {
-  return new Promise((resolve, reject) => {
-    try {
-      setTimeout(resolve, ms)
-    } catch (e) {
-      reject(e)
-    }
-  })
 }
 
 const root = path.resolve(makeKey(8))
