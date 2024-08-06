@@ -1,3 +1,7 @@
+> ⚠️ **NOTE:** ⚠️ This project is being merged into a monorepo [here](https://github.com/jrc03c/monorepo/tree/main/packages/watch). This repo will soon be archived.
+
+---
+
 # Introduction
 
 **watch.js** is yet another file system watcher for Node.
